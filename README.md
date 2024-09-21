@@ -20,7 +20,7 @@ backend and the frontend of the forum application - Warsha
 <li>Clone the repository:</li>
 </ol>
 <ul>
-<li>git clone https://github.com/your-repo/forum-app.git<br />cd forum-app</li>
+<li>git clone <br />cd forum-app</li>
 </ul>
 <ol style="font-weight: 400;">
 <li>Install dependencies for both frontend and backend:</li>
