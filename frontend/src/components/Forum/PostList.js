@@ -1,9 +1,10 @@
 
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';  // Import Link for navigation
 import Post from './Post';
-import { FaSearch } from 'react-icons/fa';  // Import the search icon
+import { FaSearch, FaSignInAlt, FaSignOutAlt, FaUserPlus } from 'react-icons/fa';  // Import necessary icons
 
 function PostList() {
     const [posts, setPosts] = useState([]);
@@ -11,6 +12,9 @@ function PostList() {
     const [newPost, setNewPost] = useState({ title: '', content: '' });
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
+
+    const token = localStorage.getItem('token');
+    const username = localStorage.getItem('username');
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -27,9 +31,15 @@ function PostList() {
         fetchPosts();
     }, []);
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('role');
+        navigate('/login');
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem('token');
         if (!token) {
             navigate('/login'); // Redirect to login if not authenticated
             return;
@@ -67,12 +77,34 @@ function PostList() {
 
     return (
         <div className="container p-4 mx-auto">
-            {/* <h3 className="mb-6 text-2xl font-semibold text-center text-[#7b46d4] max-w-2xl mx-auto">
-                Welcome to the coolest corner of the site - our chemistry class forum!
-            </h3> */}
+            {/* User Info Section - Right-aligned */}
+            <div className="flex items-center justify-end mb-6 space-x-4">
+                {username && (
+                    <span className="text-gray-700">
+                        Welcome, {username}
+                    </span>
+                )}
+                {!token ? (
+                    <div className="flex items-center space-x-4">
+                        <Link to="/login" className="flex items-center text-gray-700 hover:text-blue-500">
+                            <FaSignInAlt className="mr-1" />
+                            Login
+                        </Link>
+                        <Link to="/register" className="flex items-center text-gray-700 hover:text-blue-500">
+                            <FaUserPlus className="mr-1" />
+                            Register
+                        </Link>
+                    </div>
+                ) : (
+                    <button onClick={handleLogout} className="flex items-center text-red-500 hover:text-red-700 focus:outline-none">
+                        <FaSignOutAlt className="mr-1" />
+                        Logout
+                    </button>
+                )}
+            </div>
 
-           <h3 className="mb-6 text-2xl font-semibold text-center text-[#7b46d4]">
-              Welcome to the coolest corner of the site - our chemistry class forum!
+            <h3 className="mb-6 text-2xl font-semibold text-center text-[#7b46d4]">
+                Welcome to the coolest corner of the site - our chemistry class forum!
             </h3>
             
             {/* Search Box */}
